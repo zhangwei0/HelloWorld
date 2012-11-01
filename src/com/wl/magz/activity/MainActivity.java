@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
     private static final int DOWNLOAD_NET_OFFLINE = 1;
     private static final int DOWNLAOD_FAILURE = 2;
     private static final int DOWNLAOD_TIME_OUT = 3;
+    private static final int NEXT_ACTIVITY  = 4;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +29,8 @@ public class MainActivity extends Activity {
         createShortcut();
 
         runFirstDownload();
+        
+        mHandler.obtainMessage(NEXT_ACTIVITY).sendToTarget();
     }
 
     @Override
@@ -75,6 +78,8 @@ public class MainActivity extends Activity {
             case DOWNLAOD_TIME_OUT:
                 //TODO
                 break;
+            case NEXT_ACTIVITY:
+                startActivity(new Intent(MainActivity.this, RecommendMagazineListActivity.class));
             }
         }
     }
