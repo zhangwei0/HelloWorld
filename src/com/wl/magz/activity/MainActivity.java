@@ -1,4 +1,7 @@
-package com.wl.magz;
+package com.wl.magz.activity;
+
+import com.wl.magz.R;
+import com.wl.magz.utils.SharedPreferencesHelper;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,13 +37,22 @@ public class MainActivity extends Activity {
     }
 	
 	private void createShortcut() {
+	    SharedPreferencesHelper helper = new SharedPreferencesHelper(getApplicationContext());
+	    if(!helper.getFirstLunch()) {
+	        return;
+	    }
 	    Intent shortcutIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
 	    shortcutIntent.putExtra("duplicate", false);
 	    shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.shortcut_name));
 	    Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.icon);
 	    shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-	    shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(getApplicationContext() , MainActivity.class));
+	    Intent startIntent = new Intent(getApplicationContext() , MainActivity.class);
+	    startIntent.setAction("android.intent.action.MAIN");
+	    startIntent.addCategory("android.intent.category.LAUNCHER");
+	    shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, startIntent);
 	    sendBroadcast(shortcutIntent);
+	    
+	    helper.setFirstLaunch(false);
 	}
 
     private void runFirstDownload() {
